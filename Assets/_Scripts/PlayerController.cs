@@ -29,13 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake() {
         // Triển khai Singleton
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
