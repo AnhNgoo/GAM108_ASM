@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform arrowSpawnPoint; // Vị trí spawn mũi tên
     [SerializeField] private float shootCooldown = 0.5f;
 
+    public static PlayerController Instance { get; set; }
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator animator;
@@ -23,14 +25,29 @@ public class PlayerController : MonoBehaviour
     private float defaultGravityScale;
     private float lastShootTime;
     private int coinCount = 0;
+    private Vector2 initialPosition;
+
+    private void Awake() {
+        // Triển khai Singleton
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {
         InitializeComponents();
+        initialPosition = transform.position;
     }
 
     void Update()
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsPaused()) return;
+
         CheckGroundStatus();
         if (!isClimbing)
         {
@@ -205,8 +222,20 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        gameObject.SetActive(false);
-        Debug.Log("Player died!");
+            // Đặt lại vị trí nhân vật về vị trí ban đầu
+        transform.position = initialPosition;
+        // Đặt lại vận tốc
+        rb.linearVelocity = Vector2.zero;
+        // Đặt lại trạng thái
+        isRolling = false;
+        isClimbing = false;
+        rb.gravityScale = defaultGravityScale;
+        // Đặt lại trạng thái hoạt hình
+        animator.ResetTrigger("Roll");
+        animator.ResetTrigger("Jump");
+        animator.ResetTrigger("Clamber");
+        animator.SetBool("IsRun", false);
+        Debug.Log("Player died and respawned at initial position!");
     }
 
     public int GetCoinCount()

@@ -3,7 +3,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     [SerializeField] private int coinValue = 1; // Giá trị của đồng xu
-    [SerializeField] private AudioClip collectSound; // Âm thanh khi nhặt (tùy chọn)
+    [SerializeField] private AudioClip collectSound; // Âm thanh khi nhặt
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -13,9 +13,9 @@ public class Coin : MonoBehaviour
             if (player != null)
             {
                 player.CollectCoin(coinValue);
-                if (collectSound != null)
+                if (collectSound != null && AudioManager.Instance != null)
                 {
-                    AudioSource.PlayClipAtPoint(collectSound, transform.position);
+                    AudioManager.Instance.PlaySFX(collectSound);
                 }
                 Destroy(gameObject); // Hủy đồng xu
             }
