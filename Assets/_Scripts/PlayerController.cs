@@ -189,6 +189,10 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+        else if (collision.CompareTag("Goal")) // Assuming a "Goal" tag for level completion
+        {
+            GameManager.Instance.WinGame();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -216,20 +220,22 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
+        GameManager.Instance.DecreaseLife();
+        if (GameManager.Instance.IsPaused()) return;
             // Đặt lại vị trí nhân vật về vị trí ban đầu
         transform.position = initialPosition;
         // Đặt lại vận tốc
-        rb.linearVelocity = Vector2.zero;
-        // Đặt lại trạng thái
-        isRolling = false;
-        isClimbing = false;
-        rb.gravityScale = defaultGravityScale;
-        // Đặt lại trạng thái hoạt hình
-        animator.ResetTrigger("Roll");
-        animator.ResetTrigger("Jump");
-        animator.ResetTrigger("Clamber");
-        animator.SetBool("IsRun", false);
-        Debug.Log("Player died and respawned at initial position!");
+        // rb.linearVelocity = Vector2.zero;
+        // // Đặt lại trạng thái
+        // isRolling = false;
+        // isClimbing = false;
+        // rb.gravityScale = defaultGravityScale;
+        // // Đặt lại trạng thái hoạt hình
+        // animator.ResetTrigger("Roll");
+        // animator.ResetTrigger("Jump");
+        // animator.ResetTrigger("Clamber");
+        // animator.SetBool("IsRun", false);
+        // Debug.Log("Player died and respawned at initial position!");
     }
 
     public int GetCoinCount()

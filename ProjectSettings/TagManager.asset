@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Coin
   - Boundary
+  - Goal
   layers:
   - Default
   - TransparentFX
